@@ -37,12 +37,17 @@ const getNotes = () =>
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(response => response.json())
-    .then(data => {
-      console.log('Fetched notes:', data);
-      return data;
-    })
-    .catch(err => console.error('Error fetching notes:', err));
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Fetched notes:', data);
+    return data;
+  })
+  .catch(err => console.error('Error fetching notes:', err));
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -51,12 +56,17 @@ const saveNote = (note) =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(note)
-  }).then(response => response.json())
-    .then(data => {
-      console.log('Saved note:', data);
-      return data;
-    })
-    .catch(err => console.error('Error saving note:', err));
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Saved note:', data);
+    return data;
+  })
+  .catch(err => console.error('Error saving note:', err));
 
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
@@ -64,12 +74,17 @@ const deleteNote = (id) =>
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(response => response.json())
-    .then(data => {
-      console.log('Deleted note:', data);
-      return data;
-    })
-    .catch(err => console.error('Error deleting note:', err));
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Deleted note:', data);
+    return data;
+  })
+  .catch(err => console.error('Error deleting note:', err));
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
@@ -156,6 +171,11 @@ const handleRenderBtns = () => {
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes;
   console.log('Rendering note list:', jsonNotes);
+  if (!jsonNotes) {
+    console.error('Failed to render note list: jsonNotes is undefined');
+    return;
+  }
+
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
