@@ -22,7 +22,7 @@ app.get('*', (req, res) => {
 
 // API Routes
 app.get('/api/notes', (req, res) => {
-  fs.readFile(path.join(__dirname, 'db/db.json'), 'utf8', (err, data) => {
+  fs.readFile(path.join(__dirname, 'Develop/db/db.json'), 'utf8', (err, data) => {
     if (err) throw err;
     res.json(JSON.parse(data));
   });
@@ -36,11 +36,11 @@ app.post('/api/notes', (req, res) => {
     text,
   };
 
-  fs.readFile(path.join(__dirname, 'db/db.json'), 'utf8', (err, data) => {
+  fs.readFile(path.join(__dirname, 'Develop/db/db.json'), 'utf8', (err, data) => {
     if (err) throw err;
     const notes = JSON.parse(data);
     notes.push(newNote);
-    fs.writeFile(path.join(__dirname, 'db/db.json'), JSON.stringify(notes), 'utf8', (err) => {
+    fs.writeFile(path.join(__dirname, 'Develop/db/db.json'), JSON.stringify(notes), 'utf8', (err) => {
       if (err) throw err;
       res.json(newNote);
     });
@@ -50,11 +50,11 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', (req, res) => {
   const { id } = req.params;
 
-  fs.readFile(path.join(__dirname, 'db/db.json'), 'utf8', (err, data) => {
+  fs.readFile(path.join(__dirname, 'Develop/db/db.json'), 'utf8', (err, data) => {
     if (err) throw err;
     const notes = JSON.parse(data);
     const newNotes = notes.filter(note => note.id !== id);
-    fs.writeFile(path.join(__dirname, 'db/db.json'), JSON.stringify(newNotes), 'utf8', (err) => {
+    fs.writeFile(path.join(__dirname, 'Develop/db/db.json'), JSON.stringify(newNotes), 'utf8', (err) => {
       if (err) throw err;
       res.json({ message: 'Note deleted successfully' });
     });

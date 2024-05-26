@@ -3,6 +3,7 @@ let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
+let clearBtn;
 let noteList;
 
 if (window.location.pathname === '/notes') {
@@ -18,11 +19,13 @@ if (window.location.pathname === '/notes') {
 // Show an element
 const show = (elem) => {
   elem.style.display = 'inline';
+  console.log(`Showing element:`, elem);
 };
 
 // Hide an element
 const hide = (elem) => {
   elem.style.display = 'none';
+  console.log(`Hiding element:`, elem);
 };
 
 // activeNote is used to keep track of the note in the textarea
@@ -34,7 +37,12 @@ const getNotes = () =>
     headers: {
       'Content-Type': 'application/json'
     }
-  });
+  }).then(response => response.json())
+    .then(data => {
+      console.log('Fetched notes:', data);
+      return data;
+    })
+    .catch(err => console.error('Error fetching notes:', err));
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -43,7 +51,12 @@ const saveNote = (note) =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(note)
-  });
+  }).then(response => response.json())
+    .then(data => {
+      console.log('Saved note:', data);
+      return data;
+    })
+    .catch(err => console.error('Error saving note:', err));
 
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
@@ -51,7 +64,12 @@ const deleteNote = (id) =>
     headers: {
       'Content-Type': 'application/json'
     }
-  });
+  }).then(response => response.json())
+    .then(data => {
+      console.log('Deleted note:', data);
+      return data;
+    })
+    .catch(err => console.error('Error deleting note:', err));
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
@@ -63,12 +81,14 @@ const renderActiveNote = () => {
     noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
+    console.log('Rendered active note:', activeNote);
   } else {
     hide(newNoteBtn);
     noteTitle.removeAttribute('readonly');
     noteText.removeAttribute('readonly');
     noteTitle.value = '';
     noteText.value = '';
+    console.log('Cleared active note');
   }
 };
 
@@ -77,6 +97,7 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value
   };
+  console.log('Saving note:', newNote);
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -85,11 +106,11 @@ const handleNoteSave = () => {
 
 // Delete the clicked note
 const handleNoteDelete = (e) => {
-  // Prevents the click listener for the list from being called when the button inside of it is clicked
   e.stopPropagation();
 
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
+  console.log('Deleting note with ID:', noteId);
 
   if (activeNote.id === noteId) {
     activeNote = {};
@@ -105,31 +126,36 @@ const handleNoteDelete = (e) => {
 const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+  console.log('Viewing note:', activeNote);
   renderActiveNote();
 };
 
-// Sets the activeNote to and empty object and allows the user to enter a new note
+// Sets the activeNote to an empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
   activeNote = {};
   show(clearBtn);
+  console.log('Creating new note');
   renderActiveNote();
 };
 
 // Renders the appropriate buttons based on the state of the form
 const handleRenderBtns = () => {
-  show(clearBtn);
+  console.log('Rendering buttons:', noteTitle.value.trim(), noteText.value.trim());
   if (!noteTitle.value.trim() && !noteText.value.trim()) {
+    hide(saveNoteBtn);
     hide(clearBtn);
   } else if (!noteTitle.value.trim() || !noteText.value.trim()) {
     hide(saveNoteBtn);
   } else {
     show(saveNoteBtn);
+    show(clearBtn);
   }
 };
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-  let jsonNotes = await notes.json();
+  let jsonNotes = await notes;
+  console.log('Rendering note list:', jsonNotes);
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
