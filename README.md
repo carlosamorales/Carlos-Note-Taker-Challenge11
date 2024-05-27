@@ -34,10 +34,9 @@ Chat GPT
 
 ## Tests
 
-Build Command: npm install && cd client && npm install && npm run build && cd ..
+go to the link for the app on Heroku and test the diferent functionalities
 
-
-Start Command: npm start 
+Add a note, clear a form, save a note and delete a note
 
 ## Questions
 
