@@ -20,7 +20,7 @@ https://limitless-citadel-06559-6de1f12aff8e.herokuapp.com
 
 ## Usage
 
-![image](https://github.com/carlosamorales/Progressive-Web-Applications-PWA-Text-Editor-Carlos-Challenge-19/assets/7796766/27ce201b-f754-4839-82f0-1ce3ffcf980b)
+![image](https://github.com/carlosamorales/Carlos-Note-Taker-Challenge11/assets/7796766/79a23f7c-6e14-4b67-9007-1bd42193fba2)
 
 
 
